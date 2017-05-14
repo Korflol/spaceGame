@@ -1,0 +1,121 @@
+declarations
+
+enum gameState { mainMenu, gamePlay, gamePaused, gameOver }
+gameState currentGameState = gameState.mainMenu;
+KeyboardState = PreviousKeys;
+MouseState = mouseState;
+Texture2D = mousePic;
+Rectangle = mouseRec;
+Color mouseColor = Color.White;
+
+Keypress
+
+if (Keyboard.GetState().IsKeyDown(Keys.P) && PreviousKeys.IsKeyUp(Keys.P))  //this pauses the game
+{
+currentGameState = gameState.Paused;
+}
+
+
+if (Keyboard.GetState().IsKeyDown(Keys.P) & PreviousKeys.IsKeyDown(Keys.P)) //this code starts the game from the start menu
+{
+currentGameState = gameState.gamePlay;
+}
+
+
+
+gameplay updates
+
+
+private void updatePause()  //this code updates the pause menu
+{
+if (Keyboard.GetState().IsKeyDown(Keys.P) && PreviousKeys.IsKeyUp(Keys.P))
+{
+currentGameState = gameState.gamePlay;
+}
+else if (Keyboard.GetState().IsKeyDown(Keys.R))
+{
+currentGameState = gameState.mainMenu;
+}
+}
+
+
+
+private void gameOverMenu()  //Resets the game scores and starts a new level
+{
+if (Keyboard.GetState().IsKeyDown(Keys.R) && PreviousKeys.IsKeyUp(Keys.R))
+{
+currentGameState = gameState.mainMenu;
+}        
+}
+
+
+{if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit(); // this exits the game
+                
+                
+switch (currentGameState) //this code updates the keypress of each gamestate
+{
+case gameState.gamePlay();
+     gameplay();
+     break;
+case gameState.gamePaused();
+     gamePaused();
+     break;
+case gameState.gameOver();
+     gameOver();
+     break;
+case gameState.mainMenu();
+     break;
+}                
+PreviousKeys = Keyboard.GetState();
+}                
+
+
+
+Draw method
+
+
+protected override void Draw(GameTime gameTime) //This code draws the game screens.
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            switch (currentGameState)
+            {
+                case gameState.gamePlay:
+                    gameDraw();
+                    break;
+                case gameState.mainMenu:
+                    menuDraw();
+                    break;
+                case gameState.Paused:
+                    pauseDraw();
+                    break;
+                case gameState.gameOver:
+                    gameoverDraw();
+                    break;
+            }
+            base.Draw(gameTime);
+        } 
+
+Mouse
+
+in initialize -----
+
+IsMouseVisible = true;
+mouseRec = new Rectangle(100,100,100,100);
+
+in Content ----
+
+mousePic = Content.Load<Texture2d>("");
+
+in Update ----
+mouseState = mouse.GetState();
+
+in draw ----
+
+SpriteBatch.Begin();
+SpriteBatch.Draw(mousePic, mouseRec, mouseColor);
+SpriteBatch.End();
+
+
+
+
